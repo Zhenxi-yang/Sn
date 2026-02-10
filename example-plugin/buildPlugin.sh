@@ -24,12 +24,30 @@ check_dependencies() {
     exit 1
   fi
   
+  if ! command -v npm &> /dev/null; then
+    echo -e "${RED}Error: npm is not installed${NC}"
+    exit 1
+  fi
+  
   if ! command -v zip &> /dev/null; then
     echo -e "${RED}Error: zip is not installed${NC}"
     exit 1
   fi
   
   echo -e "${GREEN}✓ All dependencies are installed${NC}"
+}
+
+# Install npm dependencies
+install_dependencies() {
+  echo -e "${YELLOW}Installing npm dependencies...${NC}"
+  
+  if [ ! -d "node_modules" ]; then
+    npm install
+  else
+    echo -e "${GREEN}✓ Dependencies already installed${NC}"
+  fi
+  
+  echo -e "${GREEN}✓ Dependencies ready${NC}"
 }
 
 # Build Android bundle
@@ -109,11 +127,15 @@ main() {
   check_dependencies
   echo ""
   
-  echo "Step 1/2: Building Android application"
+  echo "Step 1/3: Installing dependencies"
+  install_dependencies
+  echo ""
+  
+  echo "Step 2/3: Building Android application"
   build_android
   echo ""
   
-  echo "Step 2/2: Packaging plugin"
+  echo "Step 3/3: Packaging plugin"
   package_plugin
   echo ""
   
