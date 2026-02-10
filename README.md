@@ -18,16 +18,6 @@
 
 **使用前请务必阅读 [REPORT.md](REPORT.md) 中的安全建议章节！**
 
-### 📖 开发文档
-
-详细的开发文档请查看 **[DEVELOPMENT.md](DEVELOPMENT.md)**，包含：
-- `sn-plugin-lib` 完整 API 参考（`PluginManager.init`、`registerButton`、`closePluginView`）
-- 按钮类型详解（侧边按钮、套索按钮、选择按钮）
-- 场景类型说明（NOTE、DOC）
-- `PluginConfig.json` 配置参考
-- 构建流程与打包说明
-- 开发示例与常见问题
-
 ### 📚 报告内容概览
 
 1. 包基本信息与版本历史
