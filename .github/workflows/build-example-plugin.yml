@@ -1,0 +1,79 @@
+name: Build Example Supernote Plugin
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'example-plugin/**'
+      - '.github/workflows/build-example-plugin.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'example-plugin/**'
+      - '.github/workflows/build-example-plugin.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: example-plugin/package-lock.json
+        
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Install dependencies
+      working-directory: ./example-plugin
+      run: npm install
+      
+    - name: Make build script executable
+      working-directory: ./example-plugin
+      run: chmod +x buildPlugin.sh
+      
+    - name: Build plugin
+      working-directory: ./example-plugin
+      run: ./buildPlugin.sh
+      
+    - name: Upload plugin artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: supernote-example-plugin
+        path: example-plugin/plugin-output/*.snpk
+        if-no-files-found: error
+        retention-days: 30
+        
+    - name: Create Release Notes
+      if: github.event_name == 'push'
+      working-directory: ./example-plugin
+      run: |
+        echo "## Supernote Example Plugin Build" > release-notes.md
+        echo "" >> release-notes.md
+        echo "**Build Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> release-notes.md
+        echo "**Commit:** ${{ github.sha }}" >> release-notes.md
+        echo "" >> release-notes.md
+        if [ -f "plugin-output/PluginConfig.json" ]; then
+          echo "### Plugin Configuration" >> release-notes.md
+          echo '```json' >> release-notes.md
+          cat plugin-output/PluginConfig.json >> release-notes.md
+          echo '```' >> release-notes.md
+        fi
+        
+    - name: Upload release notes
+      if: github.event_name == 'push'
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-notes
+        path: example-plugin/release-notes.md
+        retention-days: 30
