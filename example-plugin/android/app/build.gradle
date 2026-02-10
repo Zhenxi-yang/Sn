@@ -9,6 +9,11 @@ react {
     codegenDir = file("../../node_modules/@react-native/codegen")
 }
 
+/**
+ * The preferred build flavor of JavaScriptCore (JSC)
+ */
+def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -42,10 +47,12 @@ android {
 }
 
 dependencies {
+    // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    
-    // Use Hermes engine (enabled by default in gradle.properties)
-    if (project.ext.react.enableHermes) {
+
+    if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
     }
 }
