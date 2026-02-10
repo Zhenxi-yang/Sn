@@ -43,11 +43,9 @@ android {
 
 dependencies {
     implementation("com.facebook.react:react-android")
-    implementation("com.facebook.react:hermes-android")
     
-    if (hermesEnabled.toBoolean()) {
+    // Use Hermes engine (enabled by default in gradle.properties)
+    if (project.ext.react.enableHermes) {
         implementation("com.facebook.react:hermes-android")
-    } else {
-        implementation jscFlavor
     }
 }
