@@ -1,0 +1,6 @@
+rootProject.name = 'ExamplePlugin'
+apply from: file("../node_modules/@react-native/gradle-plugin/settings.gradle")
+includeBuild('../node_modules/@react-native/gradle-plugin')
+
+include ':app'
+includeBuild('../node_modules/react-native') { dependencySubstitution { substitute(module("com.facebook.react:react-android")).using(project(":packages:react-native:ReactAndroid")) } }
