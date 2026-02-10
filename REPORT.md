@@ -1,5 +1,7 @@
 # @supernote-plugin/sn-plugin-template 分析报告
 
+> **⚠️ 安全警告**: 此包包含已知安全漏洞！`@react-native-community/cli@18.0.0` 存在命令注入漏洞。使用前请务必升级到 18.0.1 或更高版本。详见 [第十三章：安全建议](#十三安全建议-️)。
+
 ## 一、包基本信息
 
 - **包名称**: `@supernote-plugin/sn-plugin-template`
@@ -259,8 +261,76 @@ tar -xzf supernote-plugin-sn-plugin-template-1.0.12.tgz
 3. 使用 React Native 技术栈开发跨平台应用
 4. 需要快速启动 Supernote 插件项目
 
-## 十三、总结
+## 十三、安全建议 ⚠️
+
+### 13.1 已知安全漏洞
+
+在分析过程中发现该模板包含的依赖存在安全漏洞：
+
+**漏洞详情**：
+- **受影响的包**: `@react-native-community/cli`
+- **当前版本**: 18.0.0（存在漏洞）
+- **漏洞类型**: 任意操作系统命令注入 (Arbitrary OS Command Injection)
+- **受影响版本范围**: >= 18.0.0, < 18.0.1
+- **修复版本**: 18.0.1
+
+### 13.2 安全风险说明
+
+命令注入漏洞可能允许攻击者：
+- 在系统上执行任意命令
+- 访问敏感数据
+- 修改或删除文件
+- 提升权限
+
+### 13.3 修复建议
+
+**强烈建议开发者在使用此模板前进行以下操作**：
+
+1. **升级依赖版本**：
+   ```bash
+   npm install @react-native-community/cli@18.0.1 --save-dev
+   # 或更新到更高的稳定版本
+   npm install @react-native-community/cli@latest --save-dev
+   ```
+
+2. **更新相关平台依赖**：
+   ```bash
+   npm install @react-native-community/cli-platform-android@18.0.1 --save-dev
+   npm install @react-native-community/cli-platform-ios@18.0.1 --save-dev
+   ```
+
+3. **运行安全审计**：
+   ```bash
+   npm audit
+   npm audit fix
+   ```
+
+4. **验证修复**：
+   ```bash
+   npm list @react-native-community/cli
+   ```
+
+### 13.4 临时缓解措施
+
+如果无法立即升级，可以考虑：
+- 限制对构建环境的访问
+- 在隔离环境中运行构建脚本
+- 监控异常的系统命令执行
+- 审查所有输入参数
+
+### 13.5 安全最佳实践
+
+使用此模板开发时应遵循：
+1. ✅ 定期运行 `npm audit` 检查依赖漏洞
+2. ✅ 及时更新依赖到最新稳定版本
+3. ✅ 使用 `package-lock.json` 锁定依赖版本
+4. ✅ 在生产环境前进行安全扫描
+5. ✅ 关注 React Native 和相关工具的安全公告
+
+## 十四、总结
 
 `@supernote-plugin/sn-plugin-template` 是一个专业的 Supernote 插件开发模板，提供了完整的开发框架和工具链。通过集成 React Native 和专有的 sn-plugin-lib，开发者可以快速创建功能丰富的 Supernote 插件。模板包含详细的示例代码、自动化构建脚本和完整的项目结构，大大降低了插件开发的门槛。
 
 该模板特别适合需要为 Supernote 设备扩展功能的开发者，无论是添加自定义工具按钮、实现特殊编辑功能，还是集成第三方服务，都可以基于这个模板快速开始开发。
+
+**⚠️ 重要提示**：在使用此模板前，请务必先修复上述安全漏洞，升级 `@react-native-community/cli` 到 18.0.1 或更高版本，以确保开发环境的安全性。
